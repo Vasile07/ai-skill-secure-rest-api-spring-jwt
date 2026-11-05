@@ -49,6 +49,8 @@ These are discussion proposals for branch `01-project-initialization`, not a fin
 
 - `GET /api/books` and `GET /api/books/{id}` — browse the catalog.
 - `POST /api/books`, `PUT /api/books/{id}`, `DELETE /api/books/{id}` — manage catalog entries.
+- `GET /api/users` and `GET /api/users/{id}` — browse demo users.
+- `POST /api/users`, `PUT /api/users/{id}`, `DELETE /api/users/{id}` — manage demo users. User records contain name and email only in this branch; password and authentication are introduced later.
 - `GET /api/book-readings`, `GET /api/book-readings/{id}` — browse reading progress.
 - `POST /api/book-readings`, `PUT /api/book-readings/{id}`, `DELETE /api/book-readings/{id}` — manage a user's book registrations and progress.
 - Optional `GET /api/health` — a simple service check.
@@ -74,4 +76,22 @@ See the skill checklist for implementation and verification details. Never commi
 
 ## Run
 
-The backend is not created yet. Once we agree on its structure and endpoints, its build and Swagger instructions will be added here.
+## Run the backend
+
+Requirements: Java 17+ and Maven 3.6.3+. Spring Boot 3.5.16 is used to stay on the Spring Boot 3 line expected by the JWT learning skill; Swagger UI is provided through springdoc.
+
+```powershell
+cd backend
+mvn spring-boot:run
+```
+
+Swagger UI: `http://localhost:8080/swagger-ui.html`  
+OpenAPI document: `http://localhost:8080/v3/api-docs`
+
+CSV files are created on first use under `./data` (relative to the process working directory). Set `CSV_DATA_DIR` to choose another directory. The API has no authentication on this branch by design.
+
+### Sample data
+
+Starter CSV fixtures are included in `backend/data/`: two synthetic users, three books, and four book-reading records. Start the app from the `backend/` directory to load these files using the default storage path. Stable UUIDs link each reading to its user and book. API writes modify the fixture files; restore them with `git restore backend/data`.
+
+The sample users have no passwords in this unauthenticated stage. When the JWT skill is applied, preserve the user IDs and reading relationships while adding BCrypt password hashes and roles. Never add plaintext passwords to the CSV files.
