@@ -1,0 +1,4 @@
+id,name,email,passwordHash,roles
+10000000-0000-4000-8000-000000000001,Alice Reader,alice@example.test,,USER
+10000000-0000-4000-8000-000000000002,Bob Reader,bob@example.test,,USER
+489e8d3c-17ee-4dfc-a3e9-e90f05a272e8,test,test@example.com,$2a$10$W0sb9BYFqvW/DOODwSwWjOE.CN.s3EQDCwMKxYkJ2WS068F.gE.3S,USER
