@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @ExceptionHandler(com.vasile07.readingtracker.auth.AuthService.InvalidCredentialsException.class)
+    ProblemDetail invalidCredentials() { return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Invalid credentials"); }
     @ExceptionHandler(NotFoundException.class)
     ProblemDetail notFound(NotFoundException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());

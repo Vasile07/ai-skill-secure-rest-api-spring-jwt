@@ -38,7 +38,7 @@ public class CsvFileStore {
                 List<List<String>> rows = new ArrayList<>();
                 for (CSVRecord record : parser) {
                     List<String> row = new ArrayList<>();
-                    for (String header : headers) row.add(record.get(header));
+                    for (String header : headers) row.add(parser.getHeaderMap().containsKey(header) ? record.get(header) : "");
                     rows.add(row);
                 }
                 return rows;

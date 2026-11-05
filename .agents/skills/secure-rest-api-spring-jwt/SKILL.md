@@ -39,6 +39,8 @@ app:
     refresh-ttl-days: 7
 ```
 
+For local development with Spring Boot 3.1+, load a `.env` file directly through Spring Config Data instead of adding a dotenv dependency or custom startup code. Add `spring.config.import: optional:file:.env[.properties]` to `application.yml`; Spring then reads simple `KEY=value` lines as properties. Keep `.env` out of version control, provide a `.env.example` containing only placeholders, and run the app from the directory where `.env` is located. Validate that `JWT_SECRET` is set and is Base64-encoded with at least 256 bits before JWT key creation. Never place a real secret in `.env.example` or tracked configuration.
+
 Suggested layout: `auth/` (controller, service, DTOs), `security/` (JwtService, JwtAuthFilter, SecurityConfig), `user/` (User, UserRepository), `token/` (RefreshToken, RefreshTokenRepository).
 
 ## Step 1: Users and password hashing
@@ -183,6 +185,14 @@ SecurityFilterChain chain(HttpSecurity http, JwtAuthFilter jwtFilter) throws Exc
 
 Provide at least one endpoint per level so the example is testable: `GET /api/me` (any logged-in user) and `GET /api/admin/stats` (ADMIN only).
 
+### Scope user-owned resources to the access token
+
+For every endpoint that reads or changes data belonging to the current user, derive the user ID from the authenticated principal populated from the access token's `sub` claim (for example, `UUID.fromString(authentication.getName())`). Never accept the owner ID from a request body, query parameter, or client-controlled header. Do not include `userId` in create/update DTOs for user-owned resources. Pass the authenticated owner ID through the service layer, scope collection queries to it, and check ownership before returning, updating, or deleting a resource by ID. Return the same not-found response for a missing resource and a resource owned by someone else to avoid leaking its existence. Keep administrator operations explicit and separate from a user's own-resource operations.
+
+### Swagger / OpenAPI Bearer authentication
+
+When the project uses Springdoc, declaring an HTTP Bearer `@SecurityScheme` only defines the scheme and makes it available to OpenAPI; it does not tell Swagger UI which operations require it. Add `@SecurityRequirement(name = "bearerAuth")` to each protected controller class (or to each protected operation). Apply it to endpoints such as `/api/me`, admin routes, and other authenticated API controllers. Leave public registration, login, refresh, and logout operations without that requirement so Swagger UI does not send bearer credentials unnecessarily. Afterward, the Swagger UI **Authorize** dialog can attach the access token to protected “Try it out” requests. The security scheme name in `@SecurityRequirement` must match the name in `@SecurityScheme`.
+
 ## Step 7: Try it
 
 ```bash
@@ -223,5 +233,7 @@ curl -X POST localhost:8080/auth/refresh -H "Content-Type: application/json" \
 - [ ] Refresh token opaque, hashed in DB, rotated on each use, reuse revokes the family
 - [ ] `/auth/logout` revokes the family
 - [ ] Filter accepts only access tokens; stateless session; `/auth/**` public
+- [ ] OpenAPI declares the Bearer scheme and marks each protected controller or operation with `@SecurityRequirement` using the same scheme name
+- [ ] User-owned resource endpoints derive the owner from the authenticated access-token subject, omit owner IDs from request DTOs, and enforce ownership for reads, updates, and deletes
 - [ ] At least one USER and one ADMIN protected endpoint, verified with 200/401/403
 - [ ] Secret read from environment, not committed

@@ -15,14 +15,11 @@ public class UserService {
     public UserService(UserRepository users, BookReadingRepository readings) { this.users = users; this.readings = readings; }
     public List<User> findAll() { return users.findAll(); }
     public User find(UUID id) { return users.findById(id).orElseThrow(() -> new NotFoundException("User not found")); }
-    public User create(UserRequest request) {
-        if (users.findByEmail(request.email()).isPresent()) throw new ConflictException("Email is already registered");
-        return users.save(new User(UUID.randomUUID(), request.name().trim(), request.email().trim().toLowerCase()));
-    }
     public User update(UUID id, UserRequest request) {
         find(id);
         users.findByEmail(request.email()).filter(existing -> !existing.id().equals(id)).ifPresent(existing -> { throw new ConflictException("Email is already registered"); });
-        return users.save(new User(id, request.name().trim(), request.email().trim().toLowerCase()));
+        User current = find(id);
+        return users.save(new User(id, request.name().trim(), request.email().trim().toLowerCase(), current.passwordHash(), current.roles()));
     }
     public void delete(UUID id) {
         find(id);

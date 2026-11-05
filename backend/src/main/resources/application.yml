@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: reading-tracker-api
   jackson:
@@ -8,6 +10,11 @@ server:
   port: 8080
 
 app:
+  jwt:
+    secret: ${JWT_SECRET}
+    issuer: reading-tracker-api
+    access-ttl-minutes: 15
+    refresh-ttl-days: 7
   storage:
     directory: ${CSV_DATA_DIR:./data}
 
