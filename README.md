@@ -1,6 +1,6 @@
 # Secure REST API with Spring Boot and JWT
 
-A small learning project for applying the [`secure-rest-api-spring-jwt` skill](SKILL.md) to a real Spring Boot REST API. The project will begin as an unauthenticated API, then gain JWT authentication, refresh-token rotation, logout/revocation, and role-based authorization.
+A small learning project for applying the [`secure-rest-api-spring-jwt` skill](.agents/skills/secure-rest-api-spring-jwt/SKILL.md) to a real Spring Boot REST API. [`AGENTS.md`](AGENTS.md) gives Codex sessions repository context and explains when to load the skill. The project begins as an unauthenticated API, then gains JWT authentication, refresh-token rotation, logout/revocation, and role-based authorization.
 
 ## Demo theme: Reading Tracker
 
@@ -41,7 +41,7 @@ backend/
         └── application.yml
 ```
 
-When authentication is added, the skill suggests `auth/`, `security/`, `user/`, and `token/` packages. We can decide the final package layout alongside the API contract before creating the backend.
+When authentication is added, the skill suggests `auth/`, `security/`, `user/`, and `token/` packages. The actual backend has been created on `01-project-initialization`; the secured branch will extend it.
 
 ## Candidate unauthenticated API
 
@@ -62,9 +62,10 @@ Suggested request fields:
 
 The initial API should validate input and return sensible HTTP statuses, while leaving authentication and authorization out. In the secured iteration, we can add registration/login/refresh/logout, a current-user endpoint, user-owned book readings, and an admin-only catalog endpoint to exercise `200`, `401`, and `403` behavior from the skill.
 
-## The skill
+## Agent and skill instructions
 
-[`SKILL.md`](SKILL.md) is the implementation guide for securing the API. Its central model is:
+- [`AGENTS.md`](AGENTS.md) provides project context and tells future sessions when to read the skill.
+- [`.agents/skills/secure-rest-api-spring-jwt/SKILL.md`](.agents/skills/secure-rest-api-spring-jwt/SKILL.md) is the detailed implementation guide for securing the API. Its central model is:
 
 - short-lived signed access JWT accepted by the API;
 - ID token for client identity display, never accepted as API credentials;
@@ -73,8 +74,6 @@ The initial API should validate input and return sensible HTTP statuses, while l
 - BCrypt password hashing, stateless Spring Security, and role-based protected endpoints.
 
 See the skill checklist for implementation and verification details. Never commit a real signing secret; configure it through an environment variable.
-
-## Run
 
 ## Run the backend
 

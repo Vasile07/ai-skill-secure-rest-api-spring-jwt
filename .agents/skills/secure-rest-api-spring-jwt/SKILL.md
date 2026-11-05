@@ -5,7 +5,7 @@ description: Secure a Java Spring Boot REST API with JWT authentication using th
 
 # Securing a Spring Boot REST API with JWT (access + ID + refresh tokens)
 
-Working example: `https://github.com/<your-user>/<your-repo>` (replace with the public repo link)
+Working example: `https://github.com/Vasile07/ai-skill-secure-rest-api-spring-jwt`
 
 ## Goal
 
