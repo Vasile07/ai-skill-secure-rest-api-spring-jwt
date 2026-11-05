@@ -5,8 +5,6 @@ description: Secure a Java Spring Boot REST API with JWT authentication using th
 
 # Securing a Spring Boot REST API with JWT (access + ID + refresh tokens)
 
-Working example: `https://github.com/Vasile07/ai-skill-secure-rest-api-spring-jwt`
-
 ## Goal
 
 Implement stateless authentication where the client logs in once, receives three tokens, and uses them for different purposes. The access token is short-lived so a leak is low-impact; the refresh token lets the user stay logged in without re-entering a password.
